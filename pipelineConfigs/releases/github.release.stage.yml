@@ -1,0 +1,42 @@
+parameters:
+  displayName: ''
+  gitHubRepoOwner: ''
+  gitHubRepoEmail: ''
+  GitHubPAT: ''
+  gitHubRepo: ''
+  gitHubBranch: ''
+  gitHubServiceConnection: ''
+
+jobs:
+- job: GitHubPublishing
+  displayName: 'Publishing To GitHub Repository'
+  timeoutInMinutes: 10
+
+  steps:
+  # 1. Checkout the Azure DevOps repository
+  #- task: UsePythonVersion@0
+  #  inputs:
+  #    versionSpec: '3.x'
+  #    addToPath: true
+
+  - checkout: self
+    displayName: 'Checkout Azure DevOps Repository'
+ 
+  - script: |
+      git config --global user.name '${{parameters.gitHubRepoEmail}}'
+      git config --global user.email '${{parameters.gitHubRepoOwner}}'
+
+      cp -r $(System.DefaultWorkingDirectory)/* $(System.ArtifactsDirectory)
+      
+      git clone https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git github-repo
+
+      cp -r $(System.ArtifactsDirectory)/* github-repo/
+      cd github-repo
+
+      git add .
+      git commit -m "Sync changes from Azure DevOps"
+
+      git push origin '${{parameters.gitHubBranch}}'
+
+    displayName: 'Add Azure DevOps to GitHub Remote'
+

@@ -1,0 +1,38 @@
+parameters:
+  displayName: ''
+  gitHubRepoOwner: ''
+  gitHubRepoEmail: ''
+  GitHubPAT: ''
+  gitHubRepo: ''
+  gitHubBranch: ''
+  gitHubServiceConnection: ''
+
+jobs:
+- job: GitHubPublishing
+  displayName: 'Publishing To GitHub Repository'
+  timeoutInMinutes: 10
+
+  steps:
+  #- task: UsePythonVersion@0
+  #  inputs:
+  #    versionSpec: '3.x'
+  #    addToPath: true
+ 
+  - script: |
+      mkdir artifacts
+      cp -r $(System.DefaultWorkingDirectory)/* artifacts/ --exclude=artifacts
+  #   rsync -av --progress $(System.DefaultWorkingDirectory)/* github-repo/ --exclude=github-repo
+    displayName: 'Prepare files for release'
+
+  - task: GitHubRelease@1
+    inputs:
+      gitHubConnection: ${{parameters.gitHubServiceConnection}}  # Define a GitHub service connection in Azure DevOps
+      repositoryName: ${{parameters.gitHubRepo}}
+      tag: 'v1.0.$(Build.BuildId)'                 # Dynamic versioning
+      target: 'main'                               # GitHub branch for the release
+      title: 'Automated Release'
+      assets: 'artifacts/*'                        # Files to include in the release
+    displayName: 'Push changes to GitHub'
+
+
+

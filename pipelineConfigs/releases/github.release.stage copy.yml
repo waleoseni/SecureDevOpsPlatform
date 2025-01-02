@@ -1,0 +1,54 @@
+parameters:
+  displayName: ''
+  gitHubRepoOwner: ''
+  gitHubRepoEmail: ''
+  serviceConnectionID: ''
+  gitHubRepo: ''
+  gitHubBranch: ''
+
+jobs:
+- job: GitHubPublishing
+  displayName: 'Publishing To GitHub Repository'
+  timeoutInMinutes: 10
+
+  steps:
+  # Step 1: Set up Git configuration
+  - script: |
+      git config --global user.email '${{parameters.gitHubRepoOwner}}'
+      git config --global user.name '${{parameters.gitHubRepoEmail}}'
+    displayName: 'Configure Git'
+
+############################################################################
+
+  # Step 2: Print debug information (optional for troubleshooting)
+  - script: |
+      echo "Service Connection ID: ${{parameters.serviceConnectionID}}"
+      echo "Access Token Length: ${#ACCESS_TOKEN}" # Check if the token is being retrieved
+      echo "GitHub Repo: ${{parameters.gitHubRepo}}"
+      echo "GitHub Branch: ${{parameters.gitHubBranch}}"
+    displayName: 'Debugging Information'
+    env:
+      ACCESS_TOKEN: $(serviceConnections.${{parameters.serviceConnectionID}}.parameters.AccessToken)
+
+###############################################################################
+
+  # Step 2: Clone the GitHub repository using the service connection
+  - task: CmdLine@2
+    displayName: 'Clone GitHub repository'
+    inputs:
+      script: |
+        git clone https://$(ACCESS_TOKEN)@github.com/${{parameters.gitHubRepo}}.git github-repo
+    env:
+      ACCESS_TOKEN: $(serviceConnections.${{parameters.serviceConnectionID}}.parameters.AccessToken)
+
+  # Step 3: Copy files to the GitHub repository
+  - script: |
+      cp -r $(System.DefaultWorkingDirectory)/* github-repo/
+      cd github-repo
+      git add .
+      git commit -m "Update from Azure DevOps pipeline"
+      git push origin '${{parameters.gitHubBranch}}'
+    displayName: 'Push changes to GitHub'
+
+
+

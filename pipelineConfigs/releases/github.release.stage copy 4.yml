@@ -1,0 +1,54 @@
+parameters:
+  displayName: ''
+  gitHubRepoOwner: ''
+  gitHubRepoEmail: ''
+  GitHubPAT: ''
+  gitHubRepo: ''
+  gitHubBranch: ''
+  gitHubServiceConnection: ''
+
+jobs:
+- job: GitHubPublishing
+  displayName: 'Publishing To GitHub Repository'
+  timeoutInMinutes: 10
+
+  steps:
+  # 1. Checkout the Azure DevOps repository
+  #- task: UsePythonVersion@0
+  #  inputs:
+  #    versionSpec: '3.x'
+  #    addToPath: true
+
+  - checkout: self
+    displayName: 'Checkout Azure DevOps Repository'
+ 
+# 2. Set up Git configuration
+  - script: |
+      git config --global user.name '${{parameters.gitHubRepoEmail}}'
+      git config --global user.email '${{parameters.gitHubRepoOwner}}'
+    displayName: 'Set up Git Configuration'
+
+# 3. Add GitHub remote
+#  - script: |
+#      git remote remove github || true
+
+  - script: |
+      git remote add github https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git
+    displayName: 'Add GitHub Remote'
+
+# 4. Ensure the branch exists locally
+  - script: |
+      git branch --show-current || git checkout -b main
+      git fetch github
+      git merge --no-edit
+    displayName: 'Ensure Branch Exists'
+
+# 5. Push changes to GitHub
+  - script: |
+      git add .
+      git commit -m "Sync changes from Azure DevOps"
+      git push github main 
+    displayName: 'Push changes to GitHub'
+
+
+
