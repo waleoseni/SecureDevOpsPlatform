@@ -27,7 +27,7 @@ stages:
   jobs:
   - template: ../releases/github.release.stage.yml
     parameters:
-      displayName: '-------Publishing Azure DevOps to GitHub Remote Repository'
+      displayName: 'Publishing to GitHub Remote Repository'
       gitHubRepoOwner: 'Omowale Oseni'
       gitHubRepoEmail: 'omowale.oseni@outlook.com'
       GitHubPAT: '$(GITHUB_PAT)'

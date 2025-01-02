@@ -8,7 +8,7 @@ parameters:
 
 jobs:
 - job: GitHubPublishing
-  displayName: 'Publishing To GitHub Repository'
+  displayName: '${{parameters.displayName}}'
   timeoutInMinutes: 10
 
   steps:
@@ -25,6 +25,5 @@ jobs:
       git add .
       git commit -m "Sync changes from Azure DevOps"
       git push origin '${{parameters.gitHubBranch}}'
-
-    displayName: '${{parameters.displayName}}'
+    displayName: 'Push to GitHub'
 
