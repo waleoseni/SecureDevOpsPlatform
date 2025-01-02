@@ -28,7 +28,6 @@ jobs:
         # Clone the GitHub repository
       git clone https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git github-repo || { echo "clone failed! Exiting..."; exit 1; }
 
-
         # Copy all files from Azure DevOps to the GitHub repo folder
       cp -r $(System.ArtifactsDirectory)/* github-repo/
 
@@ -38,7 +37,7 @@ jobs:
         # Stage, commit, and push changes
       git add .
       git commit -m "Sync changes from Azure DevOps"
-      git push origin '${{parameters.gitHubBranch}}' 
+      git push origin '${{parameters.gitHubBranch}}' ## || { echo "Push failed! Exiting..."; exit 1; }
 
     displayName: 'Push to GitHub'
 
