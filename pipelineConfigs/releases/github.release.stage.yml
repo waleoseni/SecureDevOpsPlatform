@@ -29,7 +29,7 @@ jobs:
       git clone https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git github-repo || { echo "clone failed! Exiting..."; exit 1; }
 
         # Remove all files in the GitHub repo folder except .git
-      find github-repo -mindepth 1 -not -name .git
+      find github-repo -mindepth 1 -not -name .git -exec 
 
         # Copy all files from Azure DevOps to the GitHub repo folder
       cp -r $(System.ArtifactsDirectory)/* github-repo/
