@@ -23,7 +23,8 @@ jobs:
       cp -r $(System.DefaultWorkingDirectory)/* $(System.ArtifactsDirectory)
 
          # Clone the GitHub repository
-      git clone https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git github-repo || { echo "clone failed! Exiting..."; exit 1; }
+      git clone https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git github-repo ||
+      { echo "clone failed! Exiting..."; exit 1; }
 
          # Remove all files in the GitHub repo folder except .git
          # find github-repo -mindepth 1 -not -name '.git' -exec rm -rf {} +
