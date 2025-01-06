@@ -23,14 +23,14 @@ jobs:
       cp -r $(System.DefaultWorkingDirectory)/* $(System.ArtifactsDirectory)
     displayName: 'Configure Git'
 
-  # Clean and clone repository for Sync process
+  # Clean and Clone Repository for Sync process
   - script: |
       rm -rf github-repo
       git clone https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git github-repo || { echo "clone failed! Exiting..."; exit 1; }
       cp -r github-repo/.git $(System.ArtifactsDirectory)
       rm -rf github-repo/*
       cp -r $(System.ArtifactsDirectory)/* github-repo/
-    displayName: 'Clean and clone repository'
+    displayName: 'Clean and Clone Repository'
 
   # Start repository Sync process
   - script: |

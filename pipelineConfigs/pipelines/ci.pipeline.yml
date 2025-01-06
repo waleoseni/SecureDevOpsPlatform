@@ -12,7 +12,7 @@ stages:
   jobs:
   - template: ../releases/resourceGroup.release.stage.yml
     parameters:
-      displayName: 'Deploying Resource Group'
+      displayName: 'Deploying Azure Resource Group'
       scope: 'Subscription'
       subscriptionId: '$(subscriptionId)'
       location: 'UK South'
