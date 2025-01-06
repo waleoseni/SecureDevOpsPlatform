@@ -10,7 +10,7 @@ stages:
   pool:
     name: Linux Build and Release ## Windows Build and Release ## 
   jobs:
-  - template: ../releases/resourceGroup.release.stage.yml
+  - template: ../deployment/resourceGroup.release.stage.yml
     parameters:
       displayName: 'Deploying Azure Resource Group'
       scope: 'Subscription'
@@ -29,7 +29,7 @@ stages:
   pool:
     name: Linux Build and Release ## Windows Build and Release ## 
   jobs:
-  - template: ../releases/githubSync.release.stage.yml
+  - template: ../deployment/githubSync.release.stage.yml
     parameters:
       displayName: 'Syncing Azure DevOps to GitHub Repository'
       gitHubRepoOwner: '$(GITHUB_OWNER)'
