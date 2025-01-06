@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include:
+      - main
+      - development
+      - testing
+
+stages:
+- stage: deployResourceGroup
+  pool:
+    name: Windows Build and Release ## Linux Build and Release  
+  jobs:
+  - template: ../releases/resourceGroup.release.stage.yml
+    parameters:
+      displayName: 'Deploying Resource Group'
+      scope: 'Subscription'
+      subscriptionId: '$(subscriptionId)'
+      location: 'UK South'
+      serviceConnection: 'SecureFramework'
+      deploymentFile: 'resourceGroups'
+      deploymentMode: 'Incremental'  # 'Incremental' | 'Complete' | 'Validation'
+
+
+
+
+
+
+- stage: syncWithGitHubRepo
+  pool:
+    name: Linux Build and Release ## Windows Build and Release ## 
+  jobs:
+  - template: ../releases/githubSync.release.stage.yml
+    parameters:
+      displayName: 'Syncing Azure DevOps to GitHub Repository'
+      gitHubRepoOwner: '$(GITHUB_OWNER)'
+      gitHubRepoEmail: '$(GITHUB_EMAIL)'
+      GitHubPAT: '$(GITHUB_PAT)'
+      gitHubRepo: 'waleoseni/SecureDevOpsPlatform'
+      gitHubBranch: 'main'
+

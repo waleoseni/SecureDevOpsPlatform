@@ -1,0 +1,27 @@
+parameters:
+  displayName: ''
+  scope: ''
+  subscriptionId: ''
+  location: ''
+  serviceConnection: ''
+  deploymentFile: ''
+  deploymentMode: ''
+
+jobs:
+- job: deployRG
+  displayName: 'Creatating Resource Group'
+  timeoutInMinutes: 10
+
+  steps:
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: '${{parameters.displayName}}'
+    inputs:
+      deploymentScope: '${{parameters.scope}}'
+      azureResourceManagerConnection: '${{parameters.serviceConnection}}'
+      subscriptionId: '${{parameters.subscriptionId}}'
+      location: '${{parameters.location}}'
+      csmFile: './infraBlueprints/templates/${{parameters.deploymentFile}}.bicep'
+      csmParametersFile: './infraBlueprints/parameters/${{parameters.deploymentFile}}.parameter.json'
+      deploymentMode: '${{parameters.deploymentMode}}'
+      azureSubscription: '${{parameters.serviceConnection}}' # Input alias: ConnectedServiceName
+      
