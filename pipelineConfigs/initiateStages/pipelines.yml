@@ -8,7 +8,7 @@ trigger:
 stages:
 - stage: deployResourceGroup
   pool:
-    name: Windows Build and Release ## Linux Build and Release  
+    name: Linux Build and Release ## Windows Build and Release ## 
   jobs:
   - template: ../releases/resourceGroup.release.stage.yml
     parameters:
