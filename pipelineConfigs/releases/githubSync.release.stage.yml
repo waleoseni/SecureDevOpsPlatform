@@ -7,31 +7,34 @@ parameters:
   gitHubBranch: ''
 
 jobs:
-- job: SyncingGitHubRepo
+- job: SyncGitHubRepo
   displayName: '${{parameters.displayName}}'
   timeoutInMinutes: 10
 
+  # initiate Azure DevOps Repository Checkout 
   steps:
   - checkout: self
     displayName: 'Checkout Azure DevOps Repository'
- 
+
+  # Setup Git configuration, Working Directory and Artifact directory
   - script: |
       git config --global user.name '${{parameters.gitHubRepoEmail}}'
       git config --global user.email '${{parameters.gitHubRepoOwner}}'
-      # Clean up the cloned repository
-      rm -rf github-repo
-      # Copy all files from Working Directory to the Artifact directory
       cp -r $(System.DefaultWorkingDirectory)/* $(System.ArtifactsDirectory)
-      # Clone the GitHub repository
+    displayName: 'Configure Git'
+
+  # Clean and clone repository for Sync process
+  - script: |
+      rm -rf github-repo
       git clone https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git github-repo || { echo "clone failed! Exiting..."; exit 1; }
-      # Setup Artifact directory for Sync process
       cp -r github-repo/.git $(System.ArtifactsDirectory)
       rm -rf github-repo/*
-      # Copy all files from Azure DevOps to the GitHub repo folder
       cp -r $(System.ArtifactsDirectory)/* github-repo/
-      # Change directory to the GitHub repo
+    displayName: 'Clean and clone repository'
+
+  # Start repository Sync process
+  - script: |
       cd github-repo
-      # Stage, commit, and push changes
       git add .
       git commit -m "Sync changes from Azure DevOps"
       git push origin '${{parameters.gitHubBranch}}' || { echo "Push failed! Exiting..."; exit 1; }
