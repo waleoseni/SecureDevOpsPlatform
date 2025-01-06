@@ -25,7 +25,7 @@ stages:
 
 
 
-- stage: syncWithGitHubRepo
+- stage: SyncingGitHubRepo
   pool:
     name: Linux Build and Release ## Windows Build and Release ## 
   jobs:

@@ -7,7 +7,7 @@ parameters:
   gitHubBranch: ''
 
 jobs:
-- job: GitHubSyncing
+- job: SyncingGitHubRepo
   displayName: '${{parameters.displayName}}'
   timeoutInMinutes: 10
 
@@ -20,22 +20,17 @@ jobs:
       git config --global user.email '${{parameters.gitHubRepoOwner}}'
       # Clean up the cloned repository
       rm -rf github-repo
-
       # Copy all files from Working Directory to the Artifact directory
       cp -r $(System.DefaultWorkingDirectory)/* $(System.ArtifactsDirectory)
       # Clone the GitHub repository
       git clone https://${{parameters.GitHubPAT}}@github.com/${{parameters.gitHubRepo}}.git github-repo || { echo "clone failed! Exiting..."; exit 1; }
-
+      # Setup Artifact directory for Sync process
       cp -r github-repo/.git $(System.ArtifactsDirectory)
       rm -rf github-repo/*
-
       # Copy all files from Azure DevOps to the GitHub repo folder
       cp -r $(System.ArtifactsDirectory)/* github-repo/
-
       # Change directory to the GitHub repo
       cd github-repo
-      # Clean up the cloned repository
-      ################## rm -rf github-clean-repo
       # Stage, commit, and push changes
       git add .
       git commit -m "Sync changes from Azure DevOps"
