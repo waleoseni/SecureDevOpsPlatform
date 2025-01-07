@@ -1,0 +1,14 @@
+trigger:
+  - none
+
+stages:
+- stage: destroyResourceGroup
+  pool:
+    name: Linux Build and Release ## Windows Build and Release ## 
+  jobs:
+  - template: ../deployment/resource.cleanup.stage.yml
+    parameters:
+      displayName: 'Deleting Azure Resource Group and Resources'
+      serviceConnection: 'SecureFramework'
+      resourceGroupName: 'SecureFramework-RG'
+

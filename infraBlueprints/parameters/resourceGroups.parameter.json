@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceGroupName": {
-      "value": "SecureFramework"
+      "value": "SecureFramework-RG"
     },
     "resourceGroupLocation": {
       "value": "uksouth"
