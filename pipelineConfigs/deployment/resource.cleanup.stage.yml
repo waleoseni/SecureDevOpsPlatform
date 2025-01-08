@@ -2,26 +2,40 @@ parameters:
   displayName: ''
   resourceGroupName: ''
   serviceConnection: ''
+  subscriptionId: ''
+  action: ''
 
 jobs:
 - job: destroyResourceGroup
   displayName: '${{parameters.displayName}}'
   timeoutInMinutes: 10
 
-  # initiate Azure DevOps Repository Checkout 
   steps:
-  - checkout: self
-    displayName: 'Checkout Azure DevOps Repository'
-
-  # Delete the resource group using Azure CLI
-  - task: AzureCLI@2
-    displayName: 'Delete Resource Group'
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: '${{parameters.displayName}}'
     inputs:
-      azureSubscription: '${{parameters.serviceConnection}}'
-      scriptType: bash
-      scriptLocation: inlineScript
-      inlineScript: |
-        echo 'Deleting Resource Group: ${{parameters.resourceGroupName}}'
-        az group delete --name ${{parameters.resourceGroupName}} --yes    ## --no-wait
-        echo 'Resource group deletion initiated.'
+      azureResourceManagerConnection: '${{parameters.serviceConnection}}'
+      subscriptionId: '${{parameters.subscriptionId}}'
+      action: '${{parameters.action}}'
+      resourceGroupName: '${{parameters.resourceGroupName}}'
+      azureSubscription: '${{parameters.serviceConnection}}' # Input alias: ConnectedServiceName
+      
+
+
+#  # initiate Azure DevOps Repository Checkout 
+#  steps:
+#  - checkout: self
+#    displayName: 'Checkout Azure DevOps Repository'
+#
+#  # Delete the resource group using Azure CLI
+#  - task: AzureCLI@2
+#    displayName: 'Delete Resource Group'
+#    inputs:
+#      azureSubscription: '${{parameters.serviceConnection}}'
+#      scriptType: bash
+#      scriptLocation: inlineScript
+#      inlineScript: |
+#        echo 'Deleting Resource Group: ${{parameters.resourceGroupName}}'
+#        az group delete --name ${{parameters.resourceGroupName}} --yes    ## --no-wait
+#        echo 'Resource group deletion initiated.'
 

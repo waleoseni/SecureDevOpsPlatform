@@ -57,11 +57,11 @@ The repository is organized into the following folders:
 - **Docker** (optional, for containerized builds).
 
 ### Steps
-1. Clone the repository:
+- Clone the repository:
    ```bash
    git clone https://github.com/waleoseni/SecureDevOpsPlatform.git
    ```
-2. Security Scans:
+- Security Scans:
    ```bash
    python scripts/run_security_scans.py
    ```

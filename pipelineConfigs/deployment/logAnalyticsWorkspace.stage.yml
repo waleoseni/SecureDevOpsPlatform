@@ -1,0 +1,30 @@
+parameters:
+  displayName: ''
+  scope: ''
+  resourceGroupName: ''
+  location: ''
+  serviceConnection: ''
+  subscriptionId: ''
+  action: ''
+  deploymentFile: ''
+  deploymentMode: ''
+
+jobs:
+- job: deployLogAnalyticsWorkspace
+  displayName: 'Creatating Log Analytics Workspace'
+  timeoutInMinutes: 10
+
+  steps:
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: '${{parameters.displayName}}'
+    inputs:
+      deploymentScope: '${{parameters.scope}}'
+      resourceGroupName: '${{parameters.resourceGroupName}}'
+      azureResourceManagerConnection: '${{parameters.serviceConnection}}'
+      subscriptionId: '${{parameters.subscriptionId}}'
+      action: '${{parameters.action}}'
+      location: '${{parameters.location}}'
+      csmFile: './infraBlueprints/templates/${{parameters.deploymentFile}}.bicep'
+      csmParametersFile: './infraBlueprints/parameters/${{parameters.deploymentFile}}.parameter.json'
+      deploymentMode: '${{parameters.deploymentMode}}'
+      azureSubscription: '${{parameters.serviceConnection}}' # Input alias: ConnectedServiceName

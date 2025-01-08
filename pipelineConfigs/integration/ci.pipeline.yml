@@ -5,12 +5,13 @@ trigger:
       - development
       - testing
 
+pool:
+  name: Linux Build and Release ## Windows Build and Release ## 
+
 stages:
 - stage: deployResourceGroup
-  pool:
-    name: Linux Build and Release ## Windows Build and Release ## 
   jobs:
-  - template: ../deployment/resourceGroup.release.stage.yml
+  - template: ../deployment/resourceGroup.stage.yml
     parameters:
       displayName: 'Deploying Azure Resource Group'
       scope: 'Subscription'
@@ -20,16 +21,28 @@ stages:
       deploymentFile: 'resourceGroups'
       deploymentMode: 'Incremental'  # 'Incremental' | 'Complete' | 'Validation'
 
+- stage: deployLogAnalyticsWorkspace
+  jobs:
+  - template: ../deployment/logAnalyticsWorkspace.stage.yml
+    parameters:
+      displayName: 'Deploying Log Analytics Workspace'
+      scope: 'resourceGroup'
+      resourceGroupName: 'SecureFramework-RG'
+      subscriptionId: '$(subscriptionId)'
+      action: 'Create Or Update Resource Group'
+      location: 'UK South'
+      serviceConnection: 'SecureFramework'
+      deploymentFile: 'logAnalyticsWorkspace'
+      deploymentMode: 'Incremental'  # 'Incremental' | 'Complete' | 'Validation'
+
 
 
 
 
 
 - stage: SyncGitHubRepo
-  pool:
-    name: Linux Build and Release ## Windows Build and Release ## 
   jobs:
-  - template: ../deployment/githubSync.release.stage.yml
+  - template: ../deployment/githubSync.stage.yml
     parameters:
       displayName: 'Syncing Azure DevOps to GitHub Repository'
       gitHubRepoOwner: '$(GITHUB_OWNER)'
