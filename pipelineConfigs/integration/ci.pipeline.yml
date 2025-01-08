@@ -9,7 +9,7 @@ pool:
   name: Linux Build and Release ## Windows Build and Release ## 
 
 stages:
-- stage: deployResourceGroup
+- stage: resourceGroupDeploy
   jobs:
   - template: ../deployment/resourceGroup.stage.yml
     parameters:
@@ -21,7 +21,8 @@ stages:
       deploymentFile: 'resourceGroups'
       deploymentMode: 'Incremental'  # 'Incremental' | 'Complete' | 'Validation'
 
-- stage: deployLogAnalyticsWorkspace
+- stage: LogAnalyticsWorkspaceDeploy
+  dependsOn: resourceGroupDeploy
   jobs:
   - template: ../deployment/logAnalyticsWorkspace.stage.yml
     parameters:
