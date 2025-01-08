@@ -31,11 +31,7 @@ resource pipelineLogsQuery 'Microsoft.OperationalInsights/workspaces/savedSearch
   properties: {
     category: 'Pipeline Logs Query'
     displayName: 'DevOps Pipelines Logs'
-    query: '''
-    AzureDiagnostics
-    | where ResourceType == "AzurePipelines" 
-    | summarize count() by ResultDescription
-    '''
+    query: 'AzureDiagnostics | where ResourceType == "AzurePipelines" | summarize count() by ResultDescription'
   }
   dependsOn: []
 }
@@ -46,11 +42,7 @@ resource AzureDashboard 'Microsoft.OperationalInsights/workspaces/savedSearches@
   properties: {
     category: 'Azure Dashboard Query'
     displayName: 'DevOps Logs Dashboard'
-    query: '''
-    AzureDiagnostics
-    | where ResourceType == "AzurePipelines"
-    | summarize count() by ResultDescription
-    '''
+    query: 'AzureDiagnostics | where ResourceType == "AzurePipelines" | summarize count() by ResultDescription'
   }
   dependsOn: []
 }
