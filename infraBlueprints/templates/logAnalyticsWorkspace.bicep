@@ -25,4 +25,17 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
   dependsOn: []
 }
 
-
+resource AzurePipeline 'Microsoft.OperationalInsights/workspaces/savedSearches@2023-09-01' = {
+  parent: logAnalyticsWorkspace
+  name: 'DevOpsPipeline01'
+  properties: {
+    category: 'DevOpsMonitoring'
+    displayName: 'DevOps Pipelines 01'
+    query: '''
+    AzureDiagnostics
+    | where ResourceType == "AzurePipelines" 
+    | summarize count() by ResultDescription
+    '''
+  }
+  dependsOn: []
+}
