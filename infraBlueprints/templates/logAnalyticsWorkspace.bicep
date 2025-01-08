@@ -12,6 +12,13 @@ param sku string
 @description('The SKU for the Log Analytics workspace')
 param retentionDays int
 
+@description('KQL query for Azure Diagnostics')
+param DashboardKqlQuery string = '''
+AzureDiagnostics
+| where ResourceType == "AzurePipelines" 
+| summarize count() by ResultDescription
+'''
+
 @description('Deploy Log Analytics workspace')
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: logAnalyticsName
@@ -42,7 +49,7 @@ resource AzureDashboard 'Microsoft.OperationalInsights/workspaces/savedSearches@
   properties: {
     category: 'Azure Dashboard Query'
     displayName: 'DevOps Logs Dashboard'
-    query: 'AzureDiagnostics | where ResourceType == "AzurePipelines" | summarize count() by ResultDescription'
+    query: DashboardKqlQuery
   }
   dependsOn: []
 }
