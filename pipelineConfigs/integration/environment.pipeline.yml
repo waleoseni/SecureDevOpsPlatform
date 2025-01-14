@@ -1,0 +1,22 @@
+trigger:
+  - none
+
+resources:
+  pipelines:
+    - pipeline: SecurePlatform
+      project: SecureDevOpsPlatform
+      source: SecurePlatform
+      trigger: none
+
+pool:
+  name: Linux Build and Release ## Windows Build and Release ## 
+
+jobs:
+- job: DeploySecureEnvironment
+  displayName: 'SecureEnvironment'
+  timeoutInMinutes: 10
+
+  # initiate Azure DevOps Repository Checkout 
+  steps:
+  - script: |
+      echo 'Deploying from SecureEnvironment Triggered by SecurePlatform.'

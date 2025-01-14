@@ -1,0 +1,75 @@
+trigger:
+  branches:
+    include:
+      - main
+      - development
+      - testing
+
+pool:
+  name: Linux Build and Release ## Windows Build and Release ## 
+
+stages:
+- stage: ResourceGroup
+  jobs:
+  - template: ../deployment/resourceGroup.stage.yml
+    parameters:
+      displayName: 'Deploying Azure Resource Group'
+      scope: 'Subscription'
+      subscriptionId: '$(subscriptionId)'
+      location: 'UK South'
+      serviceConnection: 'SecureFramework'
+      deploymentFile: 'resourceGroups'
+      deploymentMode: 'Incremental'  # 'Incremental' | 'Complete' | 'Validation'
+
+- stage: LogAnalyticsWorkspace
+  dependsOn: ResourceGroup
+  jobs:
+  - template: ../deployment/logAnalyticsWorkspace.stage.yml
+    parameters:
+      displayName: 'Deploying Log Analytics Workspace'
+      scope: 'resourceGroup'
+      resourceGroupName: 'SecureFramework-RG'
+      subscriptionId: '$(subscriptionId)'
+      action: 'Create Or Update Resource Group'
+      location: 'UK South'
+      serviceConnection: 'SecureFramework'
+      deploymentFile: 'logAnalyticsWorkspace'
+      deploymentMode: 'Incremental'  # 'Incremental' | 'Complete' | 'Validation'
+
+- stage: AppService
+  dependsOn: ResourceGroup
+  jobs:
+  - template: ../deployment/appService.stage.yml
+    parameters:
+      displayName: 'Deploying App Service Environment'
+      scope: 'resourceGroup'
+      resourceGroupName: 'SecureFramework-RG'
+      subscriptionId: '$(subscriptionId)'
+      action: 'Create Or Update Resource Group'
+      location: 'UK South'
+      serviceConnection: 'SecureFramework'
+      deploymentFile: 'appService'
+      deploymentMode: 'Incremental'  # 'Incremental' | 'Complete' | 'Validation'
+
+
+
+
+
+
+
+
+
+
+
+
+- stage: GitHubRepoSync
+  jobs:
+  - template: ../deployment/githubSync.stage.yml
+    parameters:
+      displayName: 'Syncing Azure DevOps to GitHub Repository'
+      gitHubRepoOwner: '$(GITHUB_OWNER)'
+      gitHubRepoEmail: '$(GITHUB_EMAIL)'
+      GitHubPAT: '$(GITHUB_PAT)'
+      gitHubRepo: '$(GITHUB_REPO)'
+      gitHubBranch: '$(GITHUB_BRANCH)'
+
