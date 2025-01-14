@@ -57,6 +57,7 @@ The repository is organized into the following folders:
 - **Docker** (optional, for containerized builds).
 
 ### Steps
+#### Stages: Commit → SAST → SCA → Build → Unit Test → DAST → Release
 - Clone the repository:
    ```bash
    git clone https://github.com/waleoseni/SecureDevOpsPlatform.git

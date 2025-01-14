@@ -11,12 +11,17 @@ resources:
 pool:
   name: Linux Build and Release ## Windows Build and Release ## 
 
-jobs:
-- job: DeploySecureEnvironment
-  displayName: 'SecureEnvironment'
-  timeoutInMinutes: 10
+stages:
+- stage: SonarQubeSecurityScan
+  jobs:
+  - template: ../securityValidation/sonarQube.stage.yml
+    parameters:
+      displayName: 'SonarQube: Security Scan and Analysis'
+      sonarQubeSecureConnection: 'SonarQubeSecureFramework'
+      scannerMode: 'cli'
+      configMode: 'manual'
+      cliProjectKey: '$(SONARQUBE_PROJECTKEY)'
+      cliProjectName: 'sonar.secure.codeAnalysis'
+      cliSources: 'juice-shop_17.1.1'
 
-  # initiate Azure DevOps Repository Checkout 
-  steps:
-  - script: |
-      echo 'Deploying from SecureEnvironment Triggered by SecurePlatform.'
+

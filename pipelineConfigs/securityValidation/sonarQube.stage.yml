@@ -1,12 +1,14 @@
 parameters:
   displayName: ''
-  resourceGroupName: ''
-  serviceConnection: ''
-  subscriptionId: ''
-  action: ''
+  sonarQubeSecureConnection: ''
+  scannerMode: ''
+  configMode: ''
+  cliProjectKey: ''
+  cliProjectName: ''
+  cliSources: ''
 
 jobs:
-- job: destroyResourceGroup
+- job: 'SonarQubeConfigAnalysis'
   displayName: '${{parameters.displayName}}'
   timeoutInMinutes: 10
 
@@ -14,16 +16,27 @@ jobs:
   steps:
   - checkout: self
     displayName: 'Checkout Azure DevOps Repository'
-
-  - task: AzureResourceManagerTemplateDeployment@3
-    displayName: '${{parameters.displayName}}'
+  
+  - task: SonarQubePrepare@7
     inputs:
-      azureResourceManagerConnection: '${{parameters.serviceConnection}}'
-      subscriptionId: '${{parameters.subscriptionId}}'
-      action: '${{parameters.action}}'
-      resourceGroupName: '${{parameters.resourceGroupName}}'
-      azureSubscription: '${{parameters.serviceConnection}}' # Input alias: ConnectedServiceName
+      SonarQube: '${{parameters.sonarQubeSecureConnection}}'
+      scannerMode: '${{parameters.scannerMode}}'
+      configMode: '${{parameters.configMode}}'
+      cliProjectKey: '${{parameters.cliProjectKey}}'
+      cliProjectName: '${{parameters.cliProjectName}}'
+      cliSources: '$(System.DefaultWorkingDirectory)/examples/${{parameters.cliSources}}'
+    displayName: 'Prepare Analysis Configuration'
       
+  - task: SonarQubeAnalyze@7
+    inputs:
+      jdkversion: 'JAVA_HOME_17_X64'
+    displayName: 'Secure Code Analysis'
+
+  - task: SonarQubePublish@7
+    inputs:
+      pollingTimeoutSec: '300'
+    displayName: 'Publish Analysis'
+
 
 
 #  # initiate Azure DevOps Repository Checkout 

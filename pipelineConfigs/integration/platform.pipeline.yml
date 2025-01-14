@@ -1,9 +1,10 @@
 trigger:
-  branches:
-    include:
-      - main
-      - development
-      - testing
+  - none
+#  branches:
+#    include:
+#      - main
+#      - development
+#      - testing
 
 pool:
   name: Linux Build and Release ## Windows Build and Release ## 

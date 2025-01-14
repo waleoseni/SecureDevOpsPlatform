@@ -12,7 +12,11 @@ jobs:
   displayName: 'Creatating Resource Group'
   timeoutInMinutes: 10
 
+  # initiate Azure DevOps Repository Checkout 
   steps:
+  - checkout: self
+    displayName: 'Checkout Azure DevOps Repository'
+
   - task: AzureResourceManagerTemplateDeployment@3
     displayName: '${{parameters.displayName}}'
     inputs:
