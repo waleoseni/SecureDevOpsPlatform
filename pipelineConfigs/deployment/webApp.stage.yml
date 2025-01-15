@@ -3,6 +3,8 @@ parameters:
   serviceConnection: ''
   appType: ''
   appName: ''
+  package: ''
+  includeRootFolder: ''
   runtimeStack: ''
   startUpCommand: ''
   appFolder: ''
@@ -21,6 +23,7 @@ jobs:
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: '${{parameters.appFolder}}'
+      includeRootFolder: '${{parameters.includeRootFolder}}'
       archiveFile: '${{parameters.archiveFile}}'
     displayName: Build Release Package
 
@@ -29,6 +32,7 @@ jobs:
       azureSubscription: '${{parameters.serviceConnection}}'
       appType: '${{parameters.appType}}'
       appName: '${{parameters.appName}}'
+      package: '${{parameters.package}}'
       runtimeStack: '${{parameters.runtimeStack}}'
       startUpCommand: '${{parameters.startUpCommand}}'
     displayName: 'Deploy to Azure Web App'
