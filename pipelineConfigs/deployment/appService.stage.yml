@@ -10,8 +10,8 @@ parameters:
   deploymentMode: ''
 
 jobs:
-- job: deployLogAnalyticsWorkspace
-  displayName: 'Creatating Log Analytics Workspace'
+- job: AppServiceEnv
+  displayName: '${{parameters.displayName}}'
   timeoutInMinutes: 10
 
   # initiate Azure DevOps Repository Checkout 
@@ -20,7 +20,7 @@ jobs:
     displayName: 'Checkout Azure DevOps Repository'
 
   - task: AzureResourceManagerTemplateDeployment@3
-    displayName: '${{parameters.displayName}}'
+    displayName: 'Azure App Service'
     inputs:
       deploymentScope: '${{parameters.scope}}'
       resourceGroupName: '${{parameters.resourceGroupName}}'

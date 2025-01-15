@@ -1,0 +1,41 @@
+parameters:
+  displayName: ''
+  projectName: ''
+  scanPath: ''
+  format: ''
+  failOnCVSS: ''
+  scanName: ''
+  nvdApiKey: ''
+
+jobs:
+- job: 'DependencyCheckAnalysis'
+  displayName: '${{parameters.displayName}}'
+  timeoutInMinutes: 10
+
+  # initiate Azure DevOps Repository Checkout 
+  steps:
+  - checkout: self
+    displayName: 'Checkout Azure DevOps Repository'
+  
+  - task: dependency-check-build-task@6
+    inputs:
+      projectName: '${{parameters.projectName}}'
+      scanPath: '$(System.DefaultWorkingDirectory)/examples/${{parameters.scanPath}}'
+      format: '${{parameters.format}}'
+      uploadReports: true
+      failOnCVSS: '${{parameters.failOnCVSS}}'
+      reportsDirectory: '$(Build.ArtifactStagingDirectory)/${{parameters.scanName}}-report'
+      warnOnCVSSViolation: true
+      nvdApiKey: '${{parameters.nvdApiKey}}'
+      localInstallPath: '/devops/${{parameters.scanName}}'
+    displayName: 'Dependency Check Analysis'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/${{parameters.scanName}}-*.xml'
+      searchFolder: '$(Build.ArtifactStagingDirectory)'
+      mergeTestResults: true
+      testRunTitle: '${{parameters.scanName}}'
+    displayName: 'Publish Dependency Check Results'
+

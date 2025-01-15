@@ -1,18 +1,18 @@
-trigger:
-  - none
-
 resources:
   pipelines:
     - pipeline: SecurePlatform
-      project: SecureDevOpsPlatform
       source: SecurePlatform
-      trigger: none
+      branch: main
+      trigger:
+        branches:
+          include:
+            - main
 
 pool:
   name: Linux Build and Release ## Windows Build and Release ## 
 
 stages:
-- stage: SonarQubeSecurityScan
+- stage: SAST
   jobs:
   - template: ../securityValidation/sonarQube.stage.yml
     parameters:
@@ -23,5 +23,60 @@ stages:
       cliProjectKey: '$(SONARQUBE_PROJECTKEY)'
       cliProjectName: 'sonar.secure.codeAnalysis'
       cliSources: 'juice-shop_17.1.1'
+
+- stage: SCA
+  dependsOn: SAST
+  jobs:
+  - template: ../securityValidation/OWASPdCheck.stage.yml
+    parameters:
+      displayName: 'OWASP Dependency Check'
+      projectName: 'SecureDevOpsPlatform'
+      scanPath: 'juice-shop_17.1.1'
+      format: 'ALL'   # available ALL, CSV, HTML, JSON, JUNIT, SARIF, XML
+      failOnCVSS: '11' # value 0 - 10 OR 11 for warning only
+      scanName: 'dependency-check'
+      nvdApiKey: '$(NVD_API)'
+
+- stage: Build
+  dependsOn: SCA
+  jobs:
+  - template: ../buildTests/build.stage.yml
+    parameters:
+      displayName: 'Building Web Application'
+      WorkingDirectoryPath: 'juice-shop_17.1.1'
+
+- stage: UnitTest
+  dependsOn: Build
+  jobs:
+  - template: ../buildTests/test.stage.yml
+    parameters:
+      displayName: 'Testing Web Application'
+      WorkingDirectoryPath: 'juice-shop_17.1.1'
+
+
+
+
+- stage: AppDeploy
+  dependsOn: UnitTest
+  jobs:
+  - template: ../deployment/webApp.stage.yml
+    parameters:
+      displayName: 'Deploying Web Application'
+      serviceConnection: 'SecureFramework'
+      appType: 'webAppLinux'
+      appName: 'SecureFramework-AS'
+      appFolder: '$(System.DefaultWorkingDirectory)/examples/juice-shop_17.1.1'
+      archiveFile: '$(System.ArtifactStagingDirectory)/juice-shop.zip' 
+      runtimeStack: 'NODE|18-lts'
+      startUpCommand: 'npm start'
+
+#- stage: DAST
+#  dependsOn: AppDeploy
+#  jobs:
+#  - template: ../securityValidation/OWASPzap.stage.yml
+#    parameters:
+#      displayName: 'OWASP Zed Attack Proxy Scan'
+#      WorkingDirectoryPath: 'juice-shop_17.1.1'
+
 
 

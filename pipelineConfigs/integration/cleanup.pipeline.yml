@@ -11,7 +11,7 @@ stages:
     parameters:
       displayName: 'Deleting Azure Resource Group and Resources'
       serviceConnection: 'SecureFramework'
-      subscriptionId: '$(subscriptionId)'
+      subscriptionId: '$(SUBSCRIPTIONID)'
       action: DeleteRG
       resourceGroupName: 'SecureFramework-RG'
 

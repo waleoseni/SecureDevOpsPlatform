@@ -1,0 +1,35 @@
+parameters:
+  displayName: ''
+  serviceConnection: ''
+  appType: ''
+  appName: ''
+  runtimeStack: ''
+  startUpCommand: ''
+  appFolder: ''
+  archiveFile: ''
+
+jobs:
+- job: 'WebAppDeploy'
+  displayName: '${{parameters.displayName}}'
+  timeoutInMinutes: 10
+
+  # initiate Azure DevOps Repository Checkout 
+  steps:
+  - checkout: self
+    displayName: 'Checkout Azure DevOps Repository'
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '${{parameters.appFolder}}'
+      archiveFile: '${{parameters.archiveFile}}'
+    displayName: Build Release Package
+
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: '${{parameters.serviceConnection}}'
+      appType: '${{parameters.appType}}'
+      appName: '${{parameters.appName}}'
+      runtimeStack: '${{parameters.runtimeStack}}'
+      startUpCommand: '${{parameters.startUpCommand}}'
+    displayName: 'Deploy to Azure Web App'
+    enabled: true

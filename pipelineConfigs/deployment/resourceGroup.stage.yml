@@ -8,8 +8,8 @@ parameters:
   deploymentMode: ''
 
 jobs:
-- job: deployResourceGroup
-  displayName: 'Creatating Resource Group'
+- job: ResourceGroupDeploy
+  displayName: '${{parameters.displayName}}'
   timeoutInMinutes: 10
 
   # initiate Azure DevOps Repository Checkout 
@@ -18,7 +18,7 @@ jobs:
     displayName: 'Checkout Azure DevOps Repository'
 
   - task: AzureResourceManagerTemplateDeployment@3
-    displayName: '${{parameters.displayName}}'
+    displayName: 'Creatating Resource Group'
     inputs:
       deploymentScope: '${{parameters.scope}}'
       azureResourceManagerConnection: '${{parameters.serviceConnection}}'

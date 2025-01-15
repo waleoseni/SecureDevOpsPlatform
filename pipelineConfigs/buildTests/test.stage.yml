@@ -1,0 +1,30 @@
+parameters:
+  displayName: ''
+  WorkingDirectoryPath: ''
+
+jobs:
+- job: 'BuidingJuiceShop'
+  displayName: '${{parameters.displayName}}'
+  timeoutInMinutes: 10
+
+  # initiate Azure DevOps Repository Checkout 
+  steps:
+  - checkout: self
+    displayName: 'Checkout Azure DevOps Repository'
+  
+  - task: Npm@1
+    inputs:
+      workingDir: '$(System.DefaultWorkingDirectory)/examples/${{parameters.WorkingDirectoryPath}}'
+      verbose: true
+    displayName: 'npm Install'
+    enabled: false
+
+  - task: Npm@1
+    inputs:
+      command: custom
+      customCommand: test
+      workingDir: '$(System.DefaultWorkingDirectory)/examples/${{parameters.WorkingDirectoryPath}}'
+      verbose: true
+    displayName: 'npm Test'
+    enabled: false
+    

@@ -6,7 +6,7 @@ parameters:
   action: ''
 
 jobs:
-- job: destroyResourceGroup
+- job: ResourcesCleanUp
   displayName: '${{parameters.displayName}}'
   timeoutInMinutes: 10
 
@@ -16,7 +16,7 @@ jobs:
     displayName: 'Checkout Azure DevOps Repository'
 
   - task: AzureResourceManagerTemplateDeployment@3
-    displayName: '${{parameters.displayName}}'
+    displayName: 'Azure Resource Group and Resources Clean up'
     inputs:
       azureResourceManagerConnection: '${{parameters.serviceConnection}}'
       subscriptionId: '${{parameters.subscriptionId}}'

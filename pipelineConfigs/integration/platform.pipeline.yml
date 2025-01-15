@@ -1,10 +1,7 @@
 trigger:
-  - none
-#  branches:
-#    include:
-#      - main
-#      - development
-#      - testing
+  branches:
+    include:
+      - main
 
 pool:
   name: Linux Build and Release ## Windows Build and Release ## 
@@ -16,7 +13,7 @@ stages:
     parameters:
       displayName: 'Deploying Azure Resource Group'
       scope: 'Subscription'
-      subscriptionId: '$(subscriptionId)'
+      subscriptionId: '$(SUBSCRIPTIONID)'
       location: 'UK South'
       serviceConnection: 'SecureFramework'
       deploymentFile: 'resourceGroups'
@@ -30,7 +27,7 @@ stages:
       displayName: 'Deploying Log Analytics Workspace'
       scope: 'resourceGroup'
       resourceGroupName: 'SecureFramework-RG'
-      subscriptionId: '$(subscriptionId)'
+      subscriptionId: '$(SUBSCRIPTIONID)'
       action: 'Create Or Update Resource Group'
       location: 'UK South'
       serviceConnection: 'SecureFramework'
@@ -45,7 +42,7 @@ stages:
       displayName: 'Deploying App Service Environment'
       scope: 'resourceGroup'
       resourceGroupName: 'SecureFramework-RG'
-      subscriptionId: '$(subscriptionId)'
+      subscriptionId: '$(SUBSCRIPTIONID)'
       action: 'Create Or Update Resource Group'
       location: 'UK South'
       serviceConnection: 'SecureFramework'
