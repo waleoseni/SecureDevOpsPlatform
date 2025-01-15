@@ -3,7 +3,7 @@ parameters:
   serviceConnection: ''
   appType: ''
   appName: ''
-  package: ''
+  localInstallPath: ''
   includeRootFolder: ''
   runtimeStack: ''
   startUpCommand: ''
@@ -20,19 +20,19 @@ jobs:
   - checkout: self
     displayName: 'Checkout Azure DevOps Repository'
 
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: '${{parameters.appFolder}}'
-      includeRootFolder: '${{parameters.includeRootFolder}}'
-      archiveFile: '${{parameters.archiveFile}}'
-    displayName: Build Release Package
+#  - task: ArchiveFiles@2
+#    inputs:
+#      rootFolderOrFile: '${{parameters.appFolder}}'
+#      includeRootFolder: '${{parameters.includeRootFolder}}'
+#      archiveFile: '${{parameters.archiveFile}}'
+#    displayName: Build Release Package
 
   - task: AzureWebApp@1
     inputs:
       azureSubscription: '${{parameters.serviceConnection}}'
       appType: '${{parameters.appType}}'
       appName: '${{parameters.appName}}'
-      package: '${{parameters.package}}'
+      package: '${{parameters.localInstallPath}}'
       runtimeStack: '${{parameters.runtimeStack}}'
       startUpCommand: '${{parameters.startUpCommand}}'
     displayName: 'Deploy to Azure Web App'
