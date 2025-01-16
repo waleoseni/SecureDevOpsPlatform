@@ -58,7 +58,7 @@ stages:
       serviceConnection: 'SecureFramework'
       appType: 'webAppLinux'
       appName: 'SecureFramework-AS'
-      localInstallPath: '/devops/juice-shop/juice-shop-17.1.1_node18_linux_x64.tgz'
+      tarInstallPath: '$(System.DefaultWorkingDirectory)/examples/juice-shop_17.1.1'    ## '$(System.DefaultWorkingDirectory)/examples/juice-shop/juice-shop-17.1.1_node18_linux_x64.tgz'
       includeRootFolder: false  # true #
       appFolder: '$(System.DefaultWorkingDirectory)/examples/juice-shop_17.1.1'
       archiveFile: '$(System.ArtifactStagingDirectory)/juice-shop.zip' 

@@ -1,14 +1,14 @@
 parameters:
   displayName: ''
   serviceConnection: ''
-  appType: ''
-  appName: ''
-  localInstallPath: ''
-  includeRootFolder: ''
-  runtimeStack: ''
-  startUpCommand: ''
-  appFolder: ''
-  archiveFile: ''
+#  appType: ''
+#  appName: ''
+#  tarInstallPath: ''
+#  includeRootFolder: ''
+#  runtimeStack: ''
+#  startUpCommand: ''
+#  appFolder: ''
+#  archiveFile: ''
 
 jobs:
 - job: 'WebAppDeploy'
@@ -27,13 +27,20 @@ jobs:
 #      archiveFile: '${{parameters.archiveFile}}'
 #    displayName: Build Release Package
 
-  - task: AzureWebApp@1
+#  - task: AzureWebApp@1
+#    inputs:
+#      azureSubscription: '${{parameters.serviceConnection}}'
+#      appType: '${{parameters.appType}}'
+#      appName: '${{parameters.appName}}'
+#      package: '${{parameters.tarInstallPath}}'
+#      runtimeStack: '${{parameters.runtimeStack}}'
+#      startUpCommand: '${{parameters.startUpCommand}}'
+#    displayName: 'Deploy to Azure Web App'
+#    enabled: true
+
+  - task: AzureCLI@2
     inputs:
       azureSubscription: '${{parameters.serviceConnection}}'
-      appType: '${{parameters.appType}}'
-      appName: '${{parameters.appName}}'
-      package: '${{parameters.localInstallPath}}'
-      runtimeStack: '${{parameters.runtimeStack}}'
-      startUpCommand: '${{parameters.startUpCommand}}'
-    displayName: 'Deploy to Azure Web App'
-    enabled: true
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: 'az webapp create --resource-group "SecureFramework-RG" --plan "SecureFramework-ASP" --name "juiceshop-AS" --deployment-container-image-name bkimminich/juice-shop'
