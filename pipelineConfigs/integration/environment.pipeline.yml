@@ -15,7 +15,7 @@ stages:
       configMode: 'manual'
       cliProjectKey: '$(SONARQUBE_PROJECTKEY)'
       cliProjectName: 'sonar.secure.codeAnalysis'
-      cliSources: 'juice-shop_17.1.1'
+      cliSources: 'juice-shop-17.1.1'
 
 - stage: SCA
   dependsOn: SAST
@@ -24,7 +24,7 @@ stages:
     parameters:
       displayName: 'OWASP Dependency Check'
       projectName: 'SecureDevOpsPlatform'
-      scanPath: 'juice-shop_17.1.1'
+      scanPath: 'juice-shop-17.1.1'
       format: 'ALL'   # available ALL, CSV, HTML, JSON, JUNIT, SARIF, XML
       failOnCVSS: '11' # value 0 - 10 OR 11 for warning only
       scanName: 'dependency-check'
@@ -36,7 +36,7 @@ stages:
   - template: ../buildTests/build.stage.yml
     parameters:
       displayName: 'Building Web Application'
-      WorkingDirectoryPath: 'juice-shop_17.1.1'
+      WorkingDirectoryPath: 'juice-shop-17.1.1'
 
 - stage: UnitTest
   dependsOn: Build
@@ -44,7 +44,7 @@ stages:
   - template: ../buildTests/test.stage.yml
     parameters:
       displayName: 'Testing Web Application'
-      WorkingDirectoryPath: 'juice-shop_17.1.1'
+      WorkingDirectoryPath: 'juice-shop-17.1.1'
 
 
 
@@ -58,9 +58,9 @@ stages:
       serviceConnection: 'SecureFramework'
       appType: 'webAppLinux'
       appName: 'SecureFramework-AS'
-      tarInstallPath: '$(System.DefaultWorkingDirectory)/examples/juice-shop_17.1.1'    ## '$(System.DefaultWorkingDirectory)/examples/juice-shop/juice-shop-17.1.1_node18_linux_x64.tgz'
+      tarInstallPath: '$(System.DefaultWorkingDirectory)/examples/juice-shop-17.1.1'    ## '$(System.DefaultWorkingDirectory)/examples/juice-shop/juice-shop-17.1.1_node18_linux_x64.tgz'
       includeRootFolder: false  # true #
-      appFolder: '$(System.DefaultWorkingDirectory)/examples/juice-shop_17.1.1'
+      appFolder: '$(System.DefaultWorkingDirectory)/examples/juice-shop-17.1.1'
       archiveFile: '$(System.ArtifactStagingDirectory)/juice-shop.zip' 
       runtimeStack: 'NODE|18-lts'
       startUpCommand: 'npm start'
@@ -71,7 +71,7 @@ stages:
 #  - template: ../securityValidation/OWASPzap.stage.yml
 #    parameters:
 #      displayName: 'OWASP Zed Attack Proxy Scan'
-#      WorkingDirectoryPath: 'juice-shop_17.1.1'
+#      WorkingDirectoryPath: 'juice-shop-17.1.1'
 
 
 

@@ -61,6 +61,8 @@ stages:
 
 
 - stage: GitHubRepoSync
+  dependsOn: [LogAnalyticsWorkspace, AppService]
+  condition: succeeded()
   jobs:
   - template: ../deployment/githubSync.stage.yml
     parameters:
