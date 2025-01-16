@@ -12,7 +12,7 @@ parameters:
 jobs:
 - job: LogAnalyticsWorkspace
   displayName: '${{parameters.displayName}}'
-  timeoutInMinutes: 10
+  timeoutInMinutes: 30
 
   # initiate Azure DevOps Repository Checkout 
   steps:

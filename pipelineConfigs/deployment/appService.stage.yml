@@ -12,7 +12,7 @@ parameters:
 jobs:
 - job: AppServiceEnv
   displayName: '${{parameters.displayName}}'
-  timeoutInMinutes: 10
+  timeoutInMinutes: 30
 
   # initiate Azure DevOps Repository Checkout 
   steps:

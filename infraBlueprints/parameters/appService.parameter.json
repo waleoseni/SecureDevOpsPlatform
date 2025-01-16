@@ -9,7 +9,7 @@
       "value": "SecureFramework-AS"
     },
     "location": {
-      "value": "uksouth"
+      "value": "northeurope"
     },
     "alwaysOn": {
       "value": false
@@ -18,10 +18,10 @@
       "value": "FtpsOnly"
     },
     "skuTier": {
-      "value": "Free"
+      "value": "Basic"
     },
     "skuName": {
-      "value": "F1"
+      "value": "B1"
     },
     "targetWorkerCount": {
       "value": 1
