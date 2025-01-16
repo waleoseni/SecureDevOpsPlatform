@@ -16,11 +16,19 @@ jobs:
   steps:
   - checkout: self
     displayName: 'Checkout Azure DevOps Repository'
+
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(System.DefaultWorkingDirectory)/examples/juice-shop-source-code/juice-shop-17.1.1.zip'
+      destinationFolder: '$(System.DefaultWorkingDirectory)/examples/sourcecode'
+      cleanDestinationFolder: true
+      overwriteExistingFiles: true
+    displayName: 'Extract Source Code'
   
   - task: dependency-check-build-task@6
     inputs:
       projectName: '${{parameters.projectName}}'
-      scanPath: '$(System.DefaultWorkingDirectory)/examples/${{parameters.scanPath}}'
+      scanPath: '$(System.DefaultWorkingDirectory)/examples/sourcecode/${{parameters.scanPath}}'
       format: '${{parameters.format}}'
       uploadReports: true
       failOnCVSS: '${{parameters.failOnCVSS}}'

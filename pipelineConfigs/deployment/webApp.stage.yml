@@ -44,3 +44,4 @@ jobs:
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: 'az webapp create --resource-group "SecureFramework-RG" --plan "SecureFramework-ASP" --name "juiceshop-AS" --deployment-container-image-name bkimminich/juice-shop'
+    displayName: 'Deploy to Azure Web App'
